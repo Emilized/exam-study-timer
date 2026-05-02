@@ -8,7 +8,7 @@ import Contact from './pages/Contact';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/exam-study-timer">
       <Routes>
         <Route path="/" element={<TimerApp />} />
         <Route path="/blog" element={<Blog />} />
