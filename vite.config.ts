@@ -7,8 +7,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
+    base: '/exam-study-timer/',  // ← ADDED THIS LINE
     plugins: [
-      react(), 
+      react(),
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
@@ -25,13 +26,13 @@ export default defineConfig(({mode}) => {
           categories: ['productivity', 'utilities', 'education'],
           icons: [
             {
-              src: '/icon-192.png',
+              src: 'icon-192.png',  // ← REMOVED / 
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any maskable'
             },
             {
-              src: '/icon-512.png',
+              src: 'icon-512.png',  // ← REMOVED /
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'
@@ -39,13 +40,13 @@ export default defineConfig(({mode}) => {
           ],
           screenshots: [
             {
-              src: '/screenshot-desktop.png',
+              src: 'screenshot-desktop.png',  // ← REMOVED /
               sizes: '1280x720',
               type: 'image/png',
               form_factor: 'wide'
             },
             {
-              src: '/screenshot-mobile.png',
+              src: 'screenshot-mobile.png',  // ← REMOVED /
               sizes: '750x1334',
               type: 'image/png',
               form_factor: 'narrow'
@@ -66,8 +67,6 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
   };
