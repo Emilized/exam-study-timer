@@ -36,7 +36,6 @@ export default function TimerApp() {
   const [selectedSubject, setSelectedSubject] = useState(SUBJECTS[0]);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showAssetsModal, setShowAssetsModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showCookieConsent, setShowCookieConsent] = useState(() => {
@@ -45,47 +44,7 @@ export default function TimerApp() {
   
   const [showStatsModal, setShowStatsModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
-  const [formattedScreenshots, setFormattedScreenshots] = useState<string[]>([]);
 
-  const handleScreenshotUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    Array.from(e.target.files).forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new window.Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = 1920;
-          canvas.height = 1080;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-             // Dark slate background to match the app theme
-             ctx.fillStyle = '#0f172a';
-             ctx.fillRect(0, 0, 1920, 1080);
-             
-             // Draw the image proportionally, centered
-             const ratio = Math.min(1920 / img.width, 1080 / img.height);
-             const w = img.width * ratio;
-             const h = img.height * ratio;
-             const x = (1920 - w) / 2;
-             const y = (1080 - h) / 2;
-             
-             // Add a subtle shadow if it doesn't take up the full screen
-             if (ratio < 1 && (w < 1920 && h < 1080)) {
-               ctx.shadowColor = 'rgba(0,0,0,0.5)';
-               ctx.shadowBlur = 40;
-               ctx.shadowOffsetY = 20;
-             }
-             
-             ctx.drawImage(img, x, y, w, h);
-             setFormattedScreenshots(prev => [...prev, canvas.toDataURL('image/png')]);
-          }
-        };
-        img.src = event.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
 
   const [stats, setStats] = useState<Record<string, number>>(() => {
     const saved = localStorage.getItem('studyStats');
@@ -354,8 +313,8 @@ export default function TimerApp() {
           <div className="text-white/80 font-medium text-sm flex items-center justify-center w-full min-h-[60px]">
             {/* This is a placeholder for Google AdSense or another ad network */}
             <div className="text-white/40 text-xs flex flex-col items-center">
-              <span>Google AdSense Placeholder</span>
-              <span className="text-[10px] opacity-70 mt-1">Display Ad • 320x50</span>
+               <span>Google AdSense Placeholder</span>
+               <span className="text-[10px] opacity-70 mt-1">Display Ad • 320x50</span>
             </div>
           </div>
         </div>
@@ -867,191 +826,7 @@ export default function TimerApp() {
           </div>
         </div>
       )}
-      {/* Assets Modal */}
-      {showAssetsModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 border border-slate-700/50 p-6 md:p-8 rounded-3xl w-full max-w-2xl max-h-[85vh] overflow-y-auto relative shadow-2xl custom-scrollbar">
-            <button 
-              onClick={() => setShowAssetsModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full"
-            >
-              <X size={20} />
-            </button>
-            <h2 className="text-2xl font-bold text-white mb-2">App Store Assets</h2>
-            <p className="text-slate-400 text-sm mb-6">Tap the "Download" buttons below to save the images to your device directly, or long-press on them.</p>
 
-            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5 mb-8">
-              <div className="flex items-start gap-3">
-                <div className="bg-amber-500/20 p-2 rounded-lg shrink-0">
-                  <Image size={24} className="text-amber-400" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-amber-400 font-bold mb-1">Make Custom 1920x1080 Screenshots</h3>
-                  <p className="text-amber-200/70 text-sm mb-4">
-                    Got an invalid dimension error on Amazon? Need to update sizes? You can upload your raw screenshots here, and we'll instantly format them onto a beautiful background perfectly sized for the Appstore (1920x1080).
-                  </p>
-                  
-                  <label className="cursor-pointer inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2.5 rounded-xl transition-colors text-sm">
-                    <Upload size={18} />
-                    Select Your Raw Screenshots
-                    <input type="file" multiple accept="image/*" className="hidden" onChange={handleScreenshotUpload} />
-                  </label>
-                </div>
-              </div>
-
-              {formattedScreenshots.length > 0 && (
-                <div className="mt-6 pt-6 border-t border-amber-500/20">
-                  <h4 className="text-amber-400 font-bold mb-4 flex justify-between items-center">
-                    Your Formatted Store Screenshots
-                    <button onClick={() => setFormattedScreenshots([])} className="text-xs bg-black/20 text-white/60 px-3 py-1 rounded-full hover:text-white">Clear All</button>
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {formattedScreenshots.map((dataUrl, idx) => (
-                      <div key={idx}>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-amber-200/70 text-xs">Custom #{idx + 1}</span>
-                          <a href={dataUrl} download={`store-screenshot-${idx + 1}.png`} className="text-xs bg-amber-500 text-slate-900 font-bold px-3 py-1 rounded-full hover:bg-amber-400 flex items-center gap-1">
-                            Download
-                          </a>
-                        </div>
-                        <img src={dataUrl} className="w-full rounded-lg border border-amber-500/30" alt={`Formatted ${idx}`} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="space-y-8">
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-white font-medium">1024x500 Promotional Image</h3>
-                  <a href="/promo-1024.png" download="promo-1024.png" className="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1.5 rounded-full hover:bg-indigo-500/30 flex items-center gap-1">
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                    Download
-                  </a>
-                </div>
-                <img src="/promo-1024.png" alt="Promo image" className="w-full rounded-xl border border-white/10" />
-              </div>
-              
-              <div className="border-t border-slate-800 pt-6 mt-6">
-                <h3 className="text-lg font-bold text-white mb-4">Screenshots (1920x1080)</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Screenshot 1</h4>
-                      <a href="/screenshot-1.png" download="screenshot-1.png" className="text-xs bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full hover:bg-amber-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/screenshot-1.png" alt="Screenshot 1" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Screenshot 2</h4>
-                      <a href="/screenshot-2.png" download="screenshot-2.png" className="text-xs bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full hover:bg-amber-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/screenshot-2.png" alt="Screenshot 2" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Screenshot 3</h4>
-                      <a href="/screenshot-3.png" download="screenshot-3.png" className="text-xs bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full hover:bg-amber-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/screenshot-3.png" alt="Screenshot 3" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-slate-800 pt-6 mt-6">
-                <h3 className="text-lg font-bold text-white mb-4">FireTV Assets</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">App Icon (1280x720)</h4>
-                      <a href="/firetv-app-icon.png" download="firetv-app-icon.png" className="text-xs bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full hover:bg-rose-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/firetv-app-icon.png" alt="FireTV App Icon" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Background (1920x1080)</h4>
-                      <a href="/firetv-bg.png" download="firetv-bg.png" className="text-xs bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full hover:bg-rose-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/firetv-bg.png" alt="FireTV Background" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Featured Logo (640x260)</h4>
-                      <a href="/firetv-logo.png" download="firetv-logo.png" className="text-xs bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full hover:bg-rose-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <div className="bg-slate-800 p-2 rounded-lg border border-slate-700">
-                      <img src="/firetv-logo.png" alt="FireTV Featured Logo" className="w-full object-contain" />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <h4 className="text-slate-300 font-medium text-sm">Featured Bg (1920x720)</h4>
-                      <a href="/firetv-featured-bg.png" download="firetv-featured-bg.png" className="text-xs bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-full hover:bg-rose-500/30 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        Download
-                      </a>
-                    </div>
-                    <img src="/firetv-featured-bg.png" alt="FireTV Featured Bg" className="w-full rounded-lg border border-slate-700" />
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-white font-medium">512x512 Icon</h3>
-                    <a href="/icon-512.png" download="icon-512.png" className="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1.5 rounded-full hover:bg-indigo-500/30 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                      Download
-                    </a>
-                  </div>
-                  <img src="/icon-512.png" alt="512 Icon" className="w-full sm:max-w-[256px] rounded-xl border border-white/10" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-white font-medium">114x114 Icon</h3>
-                    <a href="/icon-114.png" download="icon-114.png" className="text-xs bg-indigo-500/20 text-indigo-400 px-3 py-1.5 rounded-full hover:bg-indigo-500/30 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                      Download
-                    </a>
-                  </div>
-                  <img src="/icon-114.png" alt="114 Icon" className="w-full max-w-[114px] rounded-xl border border-white/10" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-8 pt-4 border-t border-slate-700 text-center">
-              <button 
-                onClick={() => setShowAssetsModal(false)}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-2 rounded-lg font-medium transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Cookie Consent Banner */}
       {showCookieConsent && (
@@ -1067,7 +842,7 @@ export default function TimerApp() {
               }}
               className="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg transition-colors whitespace-nowrap"
             >
-              Accept All
+               Accept All
             </button>
             <Link 
               to="/privacy-policy"
@@ -1082,4 +857,4 @@ export default function TimerApp() {
 
     </div>
   );
-}
+        }
