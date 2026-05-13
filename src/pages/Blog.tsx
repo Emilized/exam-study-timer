@@ -20,7 +20,6 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
           {blogPosts.map((post) => {
             const Icon = post.icon;
-            // Map colors to actual Tailwind utility strings to prevent purging issues
             const colorMap: Record<string, { bg: string, text: string, border: string }> = {
               indigo: { bg: 'bg-indigo-500/10', text: 'text-indigo-400', border: 'border-indigo-500/20' },
               emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
