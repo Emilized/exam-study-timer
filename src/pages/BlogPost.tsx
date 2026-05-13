@@ -49,6 +49,34 @@ export default function BlogPost() {
             {post.content}
           </div>
         </article>
+
+        {/* Footer Links */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex justify-center gap-6 relative z-10 flex-wrap pb-12">
+          <Link 
+            to="/about"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            About Us
+          </Link>
+          <Link 
+            to="/"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Timer
+          </Link>
+          <Link 
+            to="/privacy-policy"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Privacy & Terms
+          </Link>
+          <Link 
+            to="/contact"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Contact
+          </Link>
+        </div>
       </div>
     </div>
   );
