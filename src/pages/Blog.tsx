@@ -20,6 +20,7 @@ export default function Blog() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
           {blogPosts.map((post) => {
             const Icon = post.icon;
+            // Map colors to actual Tailwind utility strings to prevent purging issues
             const colorMap: Record<string, { bg: string, text: string, border: string }> = {
               indigo: { bg: 'bg-indigo-500/10', text: 'text-indigo-400', border: 'border-indigo-500/20' },
               emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
@@ -53,6 +54,34 @@ export default function Blog() {
               </Link>
             )
           })}
+        </div>
+
+        {/* Footer Links */}
+        <div className="mt-8 pt-8 border-t border-white/10 flex justify-center gap-6 relative z-10 flex-wrap pb-8">
+          <Link 
+            to="/about"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            About Us
+          </Link>
+          <Link 
+            to="/"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Timer
+          </Link>
+          <Link 
+            to="/privacy-policy"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Privacy & Terms
+          </Link>
+          <Link 
+            to="/contact"
+            className="text-xs text-white/40 hover:text-white/80 transition-colors underline decoration-white/20 underline-offset-4"
+          >
+            Contact
+          </Link>
         </div>
       </div>
     </div>
