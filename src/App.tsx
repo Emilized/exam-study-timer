@@ -5,7 +5,6 @@ import Blog from './pages/Blog';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import About from './pages/About';
 import Contact from './pages/Contact';
-
 import BlogPost from './pages/BlogPost';
 
 export default function App() {
